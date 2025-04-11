@@ -1,7 +1,6 @@
 import 'package:best/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
-
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -31,11 +30,11 @@ class _SignupScreenState extends State<SignupScreen> {
               child: Container(
                 width: 50,
                 height: 50,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFFF5F4F8),
                   shape: BoxShape.circle,
                 ),
-                child: Center(
+                child: const Center(
                   child: Icon(
                     Icons.arrow_back,
                     color: Color(0xFF988A44),
@@ -54,7 +53,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   ShaderMask(
                     shaderCallback: (bounds) {
-                      return LinearGradient(
+                      return const LinearGradient(
                         colors: [
                           Color.fromARGB(255, 187, 190, 39),
                           Color(0xFF898B10),
@@ -93,14 +92,27 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(height: screenHeight * 0.01),
                   Text(
                     "Create an account to get started",
-                    style: TextStyle(fontSize: screenWidth * 0.035, color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.035,
+                      color: Colors.grey,
+                    ),
                     textAlign: TextAlign.left,
                   ),
                   SizedBox(height: screenHeight * 0.03),
+
+                  /// Full Name Field
                   _buildTextField(icon: Icons.person_outline, label: "Full Name"),
                   SizedBox(height: screenHeight * 0.02),
+
+                  /// 📱 Phone Number Field (new)
+                  _buildTextField(icon: Icons.phone_outlined, label: "Phone Number"),
+                  SizedBox(height: screenHeight * 0.02),
+
+                  /// Email Field
                   _buildTextField(icon: Icons.email_outlined, label: "Email"),
                   SizedBox(height: screenHeight * 0.02),
+
+                  /// Password Field
                   _buildPasswordField(
                     label: "Password",
                     isObscure: _obscurePassword,
@@ -111,6 +123,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     },
                   ),
                   SizedBox(height: screenHeight * 0.02),
+
+                  /// Confirm Password Field
                   _buildPasswordField(
                     label: "Confirm Password",
                     isObscure: _obscureConfirmPassword,
@@ -121,6 +135,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     },
                   ),
                   SizedBox(height: screenHeight * 0.03),
+
+                  /// Register Button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -128,7 +144,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         width: screenWidth * 0.7,
                         height: screenHeight * 0.07,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
+                          gradient: const LinearGradient(
                             colors: [
                               Color(0xFFF3F717),
                               Color(0xFF898B10),
@@ -143,7 +159,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) =>  HomeScreen()), //just chnage  the "RealEstateApp() thing here to redirect to any page"
+                              MaterialPageRoute(
+                                  builder: (context) => const HomeScreen()),
                             );
                           },
                           child: Text(
@@ -167,13 +184,14 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
+  /// Reusable TextField Widget
   Widget _buildTextField({required IconData icon, required String label}) {
     return TextField(
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Color(0xFF988A44)),
+        prefixIcon: Icon(icon, color: const Color(0xFF988A44)),
         labelText: label,
         filled: true,
-        fillColor: Color(0xFFF5F4F8),
+        fillColor: const Color(0xFFF5F4F8),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7),
           borderSide: BorderSide.none,
@@ -182,14 +200,19 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildPasswordField({required String label, required bool isObscure, required VoidCallback onToggle}) {
+  /// Reusable Password Field Widget
+  Widget _buildPasswordField({
+    required String label,
+    required bool isObscure,
+    required VoidCallback onToggle,
+  }) {
     return TextField(
       obscureText: isObscure,
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF988A44)),
+        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF988A44)),
         labelText: label,
         filled: true,
-        fillColor: Color(0xFFF5F4F8),
+        fillColor: const Color(0xFFF5F4F8),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7),
           borderSide: BorderSide.none,
@@ -197,7 +220,7 @@ class _SignupScreenState extends State<SignupScreen> {
         suffixIcon: IconButton(
           icon: Icon(
             isObscure ? Icons.visibility_off : Icons.visibility,
-            color: Color(0xFF988A44),
+            color: const Color(0xFF988A44),
           ),
           onPressed: onToggle,
         ),

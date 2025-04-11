@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FAQSupportPage extends StatefulWidget {
+  const FAQSupportPage({super.key});
+
   @override
   _FAQSupportPageState createState() => _FAQSupportPageState();
 }
@@ -100,7 +102,7 @@ class _FAQSupportPageState extends State<FAQSupportPage> {
                 int index = entry.key;
                 Map<String, dynamic> faqItem = entry.value;
                 return _buildExpandableFAQ(index, faqItem["question"], faqItem["answer"], faqItem["isExpanded"]);
-              }).toList(),
+              }),
             ],
           ),
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'login_screen.dart'; // Import login screen
+import 'screens/login_screen.dart'; // Import login screen
 import 'package:best/screens/home_screen.dart'; // Home screen after login
 import 'package:best/screens/search_screen.dart'; // Import other page screens
 //import 'pages/favorite_page.dart';
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => SplashScreen(), // Splash screen route
         '/login': (context) => LoginScreen(), // Login screen route
         '/home': (context) => HomeScreen(), // Home screen after login
-        '/search': (context) => SearchResultsPage(), // Search page route
+        '/search': (context) => SearchPage(), // Search page route
        // '/favorites': (context) => FavoritePage(), // Favorites page route
         '/profile': (context) => ProfilePage(), // Profile page route
       },

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'privacy_policy_page.dart';
 import 'faq_support_page.dart';
+import 'filter_page.dart';
+import 'forgot_password.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -23,20 +26,6 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sample list of liked properties - empty for demonstration
-   // final List<Map<String, String>> likedProperties = []; // Empty list
-    final List<Map<String, String>> likedProperties = [
-  {
-    'title': 'Brookvale Villa',
-    'price': '\$320/month',
-    'image': 'assets/house1.jpg'
-  },
-  {
-    'title': 'The Overdale Apartment',
-    'price': '\$290/month',
-    'image': 'assets/house2.jpg'
-  },
-];
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -61,11 +50,7 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
             _userInfo(),
             const SizedBox(height: 20),
-            // Only show liked properties section if there are properties
-            if (likedProperties.isNotEmpty) ...[
-              _likedPropertiesSection(likedProperties),
-              const SizedBox(height: 20),
-            ],
+            // 👇 Liked properties section removed here 👇
             _settingsSection(context),
           ],
         ),
@@ -93,80 +78,16 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _likedPropertiesSection(List<Map<String, String>> properties) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            "Liked Properties",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF7C8500)),
-          ),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 240,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            children: properties.map((property) => 
-              _propertyCard(property['title']!, property['price']!, property['image']!)
-            ).toList(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _propertyCard(String title, String price, String image) {
-    return Container(
-      width: 180,
-      margin: const EdgeInsets.only(right: 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-            child: Image.asset(
-              image,
-              height: 140,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF7C8500))),
-                const SizedBox(height: 5),
-                Text(price, style: const TextStyle(color: Color(0xFFD4C600), fontWeight: FontWeight.bold)),
-                const SizedBox(height: 5),
-                Row(
-                  children: const [
-                    Icon(Icons.star, size: 14, color: Colors.amber),
-                    Text(" 5.0", style: TextStyle(color: Colors.grey, fontSize: 12)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _settingsSection(BuildContext context) {
     return Column(
       children: [
-        _settingsTile(Icons.lock, "Change Password", () {}),
+        _settingsTile(Icons.lock, "Change Password", () {
+          Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+  );
+
+        }),
         _settingsTile(Icons.notifications, "Notifications", () {}),
         _settingsTile(Icons.help_outline, "Help & Support", () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => FAQSupportPage()));
