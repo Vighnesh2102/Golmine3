@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
   const EmailVerificationScreen({super.key});
@@ -16,10 +17,13 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   int countdown = 30;
   late Timer timer;
   String correctOTP = "1234"; // Mock OTP
+  late String userEmail;
 
   @override
   void initState() {
     super.initState();
+    final Map<String, dynamic>? args = Get.arguments;
+    userEmail = args?['email'] ?? "your email";
     startTimer();
     sendOTP(); // Send OTP initially
   }
@@ -105,65 +109,30 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.lock_outline, size: 80, color: Colors.yellow[600]),
+            Icon(Icons.mail_outline, size: 80, color: Colors.yellow[600]),
             SizedBox(height: 10),
             Text(
-              "Enter the Code",
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black),
+              "Verify Your Email",
+              style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
             SizedBox(height: 10),
-            Text("Enter the 4-digit code that we just sent to", style: TextStyle(color: Colors.black54)),
-            Text("jonathan@email.com", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(4, (index) {
-                return Container(
-                  width: 50,
-                  height: 50,
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  child: TextField(
-                    controller: otpControllers[index],
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    maxLength: 1,
-                    style: TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                      counterText: "",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.yellow),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.yellow),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      if (value.length == 1 && index < 3) {
-                        FocusScope.of(context).nextFocus();
-                      }
-                    },
-                  ),
-                );
-              }),
-            ),
-            SizedBox(height: 20),
-            GestureDetector(
-              onTap: countdown == 0 ? resendOTP : null,
-              child: Text(
-                countdown > 0
-                    ? "00:${countdown.toString().padLeft(2, '0')}"
-                    : "Resend OTP",
+            Text("We've sent a verification link to:",
+                style: TextStyle(color: Colors.black54)),
+            Text(userEmail,
                 style: TextStyle(
-                  color: countdown > 0 ? Colors.black : Colors.yellow[600],
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+                    fontWeight: FontWeight.bold, color: Colors.black)),
             SizedBox(height: 20),
+            Text(
+              "Please check your email and click the verification link to continue.",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.black54),
+            ),
+            SizedBox(height: 40),
             ElevatedButton(
-              onPressed: verifyOTP,
+              onPressed: () => Get.offAllNamed('/login'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow[600],
                 shape: RoundedRectangleBorder(
@@ -171,7 +140,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
               ),
-              child: Text("Verify", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              child: Text("Go to Login",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
             ),
           ],
         ),

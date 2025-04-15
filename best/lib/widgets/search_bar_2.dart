@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -19,10 +19,10 @@ class ImageSearchScreen extends StatefulWidget {
   const ImageSearchScreen({super.key});
 
   @override
-  _ImageSearchScreenState createState() => _ImageSearchScreenState();
+  State<ImageSearchScreen> createState() => ImageSearchScreenState();
 }
 
-class _ImageSearchScreenState extends State<ImageSearchScreen> {
+class ImageSearchScreenState extends State<ImageSearchScreen> {
   final TextEditingController _controller = TextEditingController();
   List<Map<String, String>> allImages = [
     {"location": "New York", "image": "https://via.placeholder.com/150"},
@@ -113,4 +113,3 @@ class CustomSearchBar extends StatelessWidget {
     );
   }
 }
-

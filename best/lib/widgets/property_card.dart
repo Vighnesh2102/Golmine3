@@ -39,16 +39,18 @@ class PropertyCard extends StatelessWidget {
           final subtitleFont = screenWidth * (isGrid ? 0.040 : 0.034);
 
           return Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             elevation: 2,
             child: isGrid
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(16)),
                         child: Image.asset(
-                          property['image'],
+                          'assets/image1.jpg',
                           height: imageHeight,
                           width: double.infinity,
                           fit: BoxFit.cover,
@@ -61,16 +63,18 @@ class PropertyCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+                        borderRadius: const BorderRadius.horizontal(
+                            left: Radius.circular(16)),
                         child: Image.asset(
-                          property['image'],
+                          'assets/image1.jpg',
                           width: imageWidth,
                           height: imageHeight,
                           fit: BoxFit.cover,
                         ),
                       ),
                       Expanded(
-                        child: _buildDetails(priceFont, titleFont, subtitleFont, 12),
+                        child: _buildDetails(
+                            priceFont, titleFont, subtitleFont, 12),
                       ),
                     ],
                   ),
@@ -80,7 +84,8 @@ class PropertyCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDetails(double priceFont, double titleFont, double subtitleFont, double padding) {
+  Widget _buildDetails(
+      double priceFont, double titleFont, double subtitleFont, double padding) {
     return Padding(
       padding: EdgeInsets.all(padding),
       child: Column(

@@ -14,10 +14,10 @@ class ImageGrid extends StatelessWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         children: [
-          buildImage('assets/Rectangle8.png'),
-          buildImage('assets/Rectangle 9.png'),
-          buildImage('assets/Rectangle 10.png'),
-          buildImage('assets/Rectangle 11.png'),
+          buildImage('assets/image1.jpg'),
+          buildImage('assets/image1.jpg'),
+          buildImage('assets/image1.jpg'),
+          buildImage('assets/image1.jpg'),
         ],
       ),
     );

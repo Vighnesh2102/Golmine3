@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
-  const SearchBar({super.key});
+  final VoidCallback? onSearchTap;
+  final VoidCallback? onFilterTap;
+
+  const SearchBar({
+    super.key,
+    this.onSearchTap,
+    this.onFilterTap,
+  });
 
   @override
-  _SearchBarState createState() => _SearchBarState();
+  State<SearchBar> createState() => SearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class SearchBarState extends State<SearchBar> {
   Color searchIconColor = Colors.grey;
   Color filterIconColor = Colors.grey;
 
@@ -19,14 +26,18 @@ class _SearchBarState extends State<SearchBar> {
         prefixIcon: InkWell(
           onTap: () {
             setState(() => searchIconColor = Colors.brown);
-            print("Search icon clicked");
+            if (widget.onSearchTap != null) {
+              widget.onSearchTap!();
+            }
           },
           child: Icon(Icons.search, color: searchIconColor),
         ),
         suffixIcon: InkWell(
           onTap: () {
             setState(() => filterIconColor = Colors.brown);
-            print("Filter icon clicked");
+            if (widget.onFilterTap != null) {
+              widget.onFilterTap!();
+            }
           },
           child: Icon(Icons.filter_list, color: filterIconColor),
         ),

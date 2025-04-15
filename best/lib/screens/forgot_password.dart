@@ -1,38 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:best/screens/login_screen.dart'; // Ensure this import is added for navigation to LoginScreen
+import 'package:best/presentation/controllers/auth_controller.dart';
+import 'package:get/get.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<ForgotPasswordScreen> createState() => ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  bool _obscureNewPassword = true;
-  bool _obscureConfirmPassword = true;
-
+class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _authController = Get.find<AuthController>();
 
-  void _setNewPassword() {
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _requestPasswordReset() async {
+    if (!_formKey.currentState!.validate()) return;
+
     final email = emailController.text.trim();
-    final newPassword = newPasswordController.text.trim();
-    final confirmPassword = confirmPasswordController.text.trim();
+    final result = await _authController.resetPassword(email: email);
 
-    if (email.isEmpty || newPassword.isEmpty || confirmPassword.isEmpty) {
-      _showDialog("All fields are required.");
-      return;
+    if (result == "Success") {
+      _showDialog(
+        "Password reset link has been sent to your email. Please check your inbox.",
+        isSuccess: true,
+      );
+    } else {
+      _showDialog(
+        "Error sending reset link: $result",
+      );
     }
-
-    if (newPassword != confirmPassword) {
-      _showDialog("Passwords do not match. Please re-enter.");
-      return;
-    }
-
-    // TODO: Connect with Supabase function to update password
-    _showDialog("Password reset successful for $email", isSuccess: true);
   }
 
   void _showDialog(String message, {bool isSuccess = false}) {
@@ -91,7 +94,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     child: TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        if (isSuccess) Navigator.of(context).pop();
+                        if (isSuccess) Get.offNamed('/login');
                       },
                       child: const Text(
                         "OK",
@@ -142,12 +145,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             top: screenHeight * 0.05,
             left: 10,
             child: GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()), // Navigate to LoginScreen
-                );
-              },
+              onTap: () => Get.offNamed('/login'),
               child: Container(
                 width: 50,
                 height: 50,
@@ -168,111 +166,97 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
           // Main Content Area
           Positioned(
-            top: screenHeight * 0.35, // Adjust so content starts after the banner
+            top: screenHeight * 0.35,
             left: 0,
             right: 0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 500),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 25),
+                child: Form(
+                  key: _formKey,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 500),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 25),
 
-                      // Gradient Title Text
-                      ShaderMask(
-                        shaderCallback: (bounds) => const LinearGradient(
-                          colors: [
-                            Color.fromARGB(255, 187, 190, 39),
-                            Color(0xFF898B10),
-                            Color(0xFF52530D),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ).createShader(bounds),
-                        child: Text(
-                          "Set New Password",
+                        // Gradient Title Text
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [
+                              Color.fromARGB(255, 187, 190, 39),
+                              Color(0xFF898B10),
+                              Color(0xFF52530D),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ).createShader(bounds),
+                          child: Text(
+                            "Reset Password",
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.07,
+                              fontFamily: "Lato",
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        Text(
+                          "Enter your email address to receive a password reset link.",
                           style: TextStyle(
-                            fontSize: screenWidth * 0.07,
-                            fontFamily: "Lato",
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white,
+                            color: Colors.grey,
+                            fontSize: screenWidth * 0.035,
                           ),
                         ),
-                      ),
 
-                      const SizedBox(height: 30),
+                        const SizedBox(height: 30),
 
-                      _buildTextField(
-                        controller: emailController,
-                        label: "Email",
-                        icon: Icons.email_outlined,
-                      ),
+                        _buildEmailField(),
 
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 35),
 
-                      _buildTextField(
-                        controller: newPasswordController,
-                        label: "New Password",
-                        icon: Icons.lock_outline,
-                        obscure: _obscureNewPassword,
-                        toggleObscure: () {
-                          setState(() {
-                            _obscureNewPassword = !_obscureNewPassword;
-                          });
-                        },
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      _buildTextField(
-                        controller: confirmPasswordController,
-                        label: "Confirm New Password",
-                        icon: Icons.lock_outline,
-                        obscure: _obscureConfirmPassword,
-                        toggleObscure: () {
-                          setState(() {
-                            _obscureConfirmPassword = !_obscureConfirmPassword;
-                          });
-                        },
-                      ),
-
-                      const SizedBox(height: 35),
-
-                      Center(
-                        child: Container(
-                          width: screenWidth * 0.7,
-                          height: screenHeight * 0.07,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFFF3F717),
-                                Color(0xFF898B10),
-                                Color(0xFF52530D),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: TextButton(
-                            onPressed: _setNewPassword,
-                            child: Text(
-                              "Confirm",
-                              style: TextStyle(
-                                fontSize: screenWidth * 0.045,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
+                        Center(
+                          child: Obx(() => Container(
+                                width: screenWidth * 0.7,
+                                height: screenHeight * 0.07,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFFF3F717),
+                                      Color(0xFF898B10),
+                                      Color(0xFF52530D),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: TextButton(
+                                  onPressed: _authController.isLoading.value
+                                      ? null
+                                      : _requestPasswordReset,
+                                  child: _authController.isLoading.value
+                                      ? const CircularProgressIndicator(
+                                          color: Colors.white)
+                                      : Text(
+                                          "Send Reset Link",
+                                          style: TextStyle(
+                                            fontSize: screenWidth * 0.045,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                ),
+                              )),
                         ),
-                      ),
 
-                      const SizedBox(height: 30),
-                    ],
+                        const SizedBox(height: 30),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -283,35 +267,29 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    bool obscure = false,
-    VoidCallback? toggleObscure,
-  }) {
-    return TextField(
-      controller: controller,
-      obscureText: obscure,
+  Widget _buildEmailField() {
+    return TextFormField(
+      controller: emailController,
+      keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: const Color(0xFF988A44)),
-        labelText: label,
+        prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF988A44)),
+        labelText: "Email",
         filled: true,
         fillColor: const Color(0xFFF5F4F8),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7),
           borderSide: BorderSide.none,
         ),
-        suffixIcon: toggleObscure != null
-            ? IconButton(
-                icon: Icon(
-                  obscure ? Icons.visibility_off : Icons.visibility,
-                  color: const Color(0xFF988A44),
-                ),
-                onPressed: toggleObscure,
-              )
-            : null,
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your email';
+        }
+        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+          return 'Please enter a valid email';
+        }
+        return null;
+      },
     );
   }
 }
